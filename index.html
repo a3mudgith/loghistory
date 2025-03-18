@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Prediction Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .btn {
+            width: 100px;
+            height: 100px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .btn:hover {
+            transform: scale(1.1);
+        }
+        .red { background: red; }
+        .green { background: green; }
+        .blue { background: blue; }
+        .result {
+            font-size: 18px;
+            margin: 15px 0;
+        }
+        .balance {
+            font-size: 22px;
+            color: #4CAF50;
+        }
+        .countdown {
+            font-size: 20px;
+            color: #ff9800;
+        }
+        .play-again {
+            background: #6200ea;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        .play-again:hover {
+            background: #3700b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Color Prediction Game 🎯</h1>
+    <div class="balance">Balance: <span id="balance">100</span> points</div>
+    
+    <div class="btn-container">
+        <button class="btn red" onclick="selectColor('red')"></button>
+        <button class="btn green" onclick="selectColor('green')"></button>
+        <button class="btn blue" onclick="selectColor('blue')"></button>
+    </div>
+    
+    <div class="result" id="result">Choose a color to predict!</div>
+    <div class="countdown" id="countdown">Timer: 10s</div>
+    
+    <button class="play-again" onclick="restartGame()">Play Again</button>
+</div>
+
+<script>
+    let balance = 100;
+    let selectedColor = "";
+    let countdown = 10;
+    let countdownInterval;
+
+    function selectColor(color) {
+        selectedColor = color;
+        document.getElementById("result").innerHTML = `You selected: <strong>${color}</strong>`;
+        startCountdown();
+    }
+
+    function startCountdown() {
+        clearInterval(countdownInterval);
+        countdown = 10;
+        document.getElementById("countdown").innerText = `Timer: ${countdown}s`;
+        
+        countdownInterval = setInterval(() => {
+            countdown--;
+            document.getElementById("countdown").innerText = `Timer: ${countdown}s`;
+            
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                revealResult();
+            }
+        }, 1000);
+    }
+
+    function revealResult() {
+        const colors = ["red", "green", "blue"];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+        if (selectedColor === randomColor) {
+            balance += 10;
+            document.getElementById("result").innerHTML = `🎉 You Win! The color was <strong>${randomColor}</strong>`;
+        } else {
+            balance -= 10;
+            document.getElementById("result").innerHTML = `😢 You Lose! The color was <strong>${randomColor}</strong>`;
+        }
+
+        document.getElementById("balance").innerText = balance;
+
+        if (balance <= 0) {
+            alert("Game over! You have 0 balance.");
+            balance = 100;  // Reset balance
+        }
+    }
+
+    function restartGame() {
+        balance = 100;
+        document.getElementById("balance").innerText = balance;
+        document.getElementById("result").innerText = "Choose a color to predict!";
+        document.getElementById("countdown").innerText = "Timer: 10s";
+    }
+</script>
+
+</body>
+</html>
